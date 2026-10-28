@@ -9,6 +9,11 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
+      - name: Create imgui symlink to root
+        run: |
+          ln -sfn . imgui
+          ls -la
+
       - name: Compile
         run: |
           SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
@@ -20,7 +25,7 @@ jobs:
           -fobjc-arc \
           -framework Foundation -framework UIKit -framework Metal -framework QuartzCore \
           Atlas.mm imgui.cpp imgui_draw.cpp imgui_widgets.cpp imgui_impl_metal.mm \
-          -I./ \
+          -I./ -I./imgui \
           -o AtlasExecutor.dylib
 
       - name: Upload
