@@ -6,12 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List files
-        run: ls -la
+      - name: Show Xcode version
+        run: xcodebuild -version
 
       - name: Compile
         run: |
+          SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
+          echo "Using SDK: $SDK_PATH"
+
           clang++ -dynamiclib -std=c++17 \
+          -isysroot "$SDK_PATH" \
+          -target arm64-apple-ios14.0 \
+          -fobjc-arc \
           -framework Foundation -framework UIKit -framework Metal -framework QuartzCore \
           Atlas.mm imgui.cpp imgui_draw.cpp imgui_widgets.cpp imgui_impl_metal.mm \
           -I./ \
